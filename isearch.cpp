@@ -50,7 +50,7 @@ SearchResult ISearch::startSearch(ILogger *Logger, const Map &map, const Environ
             if (current.i == success.i || current.j == success.j)
                 success_curr_cost = current.g + 1;
             else
-                success_curr_cost = current.g + CN_SQRT_TWO;
+                success_curr_cost = current.g + sqrt(2);
             bool not_opened = not_in_open(success, open);
             if (not_opened || success_curr_cost < success.g) {
                 success.parent = &close[hash(current, height)];
