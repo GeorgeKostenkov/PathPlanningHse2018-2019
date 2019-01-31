@@ -9,7 +9,7 @@ class Astar : public ISearch
         Astar(double HW, bool BT);
 
     protected:
-        double computeHFromCellToCell(int i1, int j1, int i2, int j2, const EnvironmentOptions &options) override;
+        virtual double computeHFromCellToCell(int i1, int j1, int i2, int j2, const EnvironmentOptions &options);
 };
 
 #endif
