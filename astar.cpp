@@ -11,13 +11,13 @@ double Astar::computeHFromCellToCell(int i1, int j1, int i2, int j2, const Envir
     //need to implement
 
     int dx = abs(i2 - i1), dy = abs(j2 - j1);
-    if (options.metrictype == 0) {
+    if (options.metrictype == CN_SP_MT_DIAG) {
         return dx + dy + (CN_SQRT_TWO - 2) * std::min(dx, dy);
-    } else if (options.metrictype == 1) {
+    } else if (options.metrictype == CN_SP_MT_MANH) {
         return dx + dy;
-    } else if (options.metrictype == 2) {
+    } else if (options.metrictype == CN_SP_MT_EUCL) {
         return sqrt(dx * dx + dy * dy);
-    } else if (options.metrictype == 3) {
+    } else if (options.metrictype == CN_SP_MT_CHEB) {
         return dx + dy -  std::min(dx, dy);
     } else {
         return 0;
