@@ -36,10 +36,10 @@ class Map
         bool CellOnGrid (int i, int j) const;
         bool CellIsObstacle(int i, int j) const;
         int  getValue(int i, int j) const;
-        int getFinish_x() const;
-        int getFinish_y() const;
-        int getStart_x() const;
-        int getStart_y() const;
+        int getFinish_i() const;
+        int getFinish_j() const;
+        int getStart_i() const;
+        int getStart_j() const;
         int getMapHeight() const;
         int getMapWidth() const;
         double getCellSize() const;

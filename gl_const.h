@@ -1,7 +1,7 @@
 #ifndef GL_CONST_H
 #define	GL_CONST_H
 
-#define CONTAINER std::map<long int, Node>
+#define CONTAINER std::map<long long int, Node>
 #define MAX_DOUBLE std::numeric_limits<double>::max();
 
 #define CN_PI_CONSTANT 3.14159265359

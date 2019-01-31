@@ -339,22 +339,22 @@ double Map::getCellSize() const
       return cellSize;
 }
 
-int Map::getFinish_x() const
+int Map::getFinish_i() const
 {
     return goal_i;
 }
 
-int Map::getFinish_y() const
+int Map::getFinish_j() const
 {
     return goal_j;
 }
 
-int Map::getStart_x() const
+int Map::getStart_i() const
 {
     return start_i;
 }
 
-int Map::getStart_y() const
+int Map::getStart_j() const
 {
     return start_j;
 }
