@@ -135,7 +135,8 @@ std::_List_iterator<Node> ISearch::optimal() {
         if ((*it).F < (*optimal).F) {
             optimal = it;
         } else if ((*it) == (*optimal)) {
-            if ((*it).g < (*optimal).g)
+            if (((*it).g > (*optimal).g && CN_SP_BT_GMAX)
+                    || ((*it).g < (*optimal).g && CN_SP_BT_GMIN))
                 optimal = it;
             else if ((*it).g == (*optimal).g) {
                 if ((*it).H < (*optimal).H)
@@ -146,15 +147,20 @@ std::_List_iterator<Node> ISearch::optimal() {
     return optimal;
 }
 
-/*void ISearch::makeSecondaryPath()
-{
-    int x1, x2, y1, y2;
-    for (auto it = lppath.begin(); it != lppath.end();++it) {
-        x1 = (*it).i;
-        y1 = (*it).j;
-        x2 = ((*(++it)).i);
-        y2 = ((*(++it)).j);
-        if ()
-
+void ISearch::makeSecondaryPath() {
+    auto it = lppath.begin();
+    int first_I, first_J, second_I, second_J, diff1, diff2;
+    hppath.push_back(*it);
+    while (it != --lppath.end()) {
+        first_I = it->i;
+        first_J = (it++)->j;
+        second_I = it->i;
+        second_J = (it++)->j;
+        diff1 = second_I - first_I;
+        diff2 = second_J - first_J;
+        if ((it->i - second_I) != diff1 || (it->j - second_J) != diff2)
+            hppath.push_back(*(--it));
+        else
+            --it;
     }
-}*/
+}
