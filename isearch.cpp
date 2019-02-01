@@ -8,7 +8,6 @@ ISearch::ISearch()
 
 ISearch::~ISearch(void) {}
 
-
 SearchResult ISearch::startSearch(ILogger *Logger, const Map &map, const EnvironmentOptions &options)
 {
     //need to implement
@@ -20,7 +19,7 @@ SearchResult ISearch::startSearch(ILogger *Logger, const Map &map, const Environ
     finish.i = map.getFinish_i();
     finish.j = map.getFinish_j();
     start.parent = nullptr;
-    unsigned long long steps = 0;
+    unsigned int steps = 0;
     double success_curr_cost;
     int height = map.getMapHeight();
     start.g = 0;
@@ -86,7 +85,6 @@ std::list<Node> ISearch::findSuccessors(Node curNode, const Map &map, const Envi
 {
     std::list<Node> successors;
     //need to implement
-    int height = map.getMapHeight();
     Node child;
     int x = curNode.i, y = curNode.j;
     for (int i = x - 1; i < x + 2; ++i) {
@@ -125,7 +123,7 @@ void ISearch::makePrimaryPath(Node curNode)
     lppath.push_front(current);
 }
 
-long long int ISearch::hash (Node node, int height) {
+int ISearch::hash (Node node, int height) {
     return node.i + node.j * height;
 }
 
@@ -164,3 +162,4 @@ void ISearch::makeSecondaryPath() {
             --it;
     }
 }
+
