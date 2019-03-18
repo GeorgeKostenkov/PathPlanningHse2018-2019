@@ -37,7 +37,7 @@ void JP_Search::Jump_Points(int dir_i, int dir_j, Node current, const Map &map, 
             return;
         if (map.getFinish_i() == current.i && map.getFinish_j() == current.j)
             found = true;
-        if (dir_j == 0) {
+        if (!dir_j) {
             if (map.CellOnGrid(current.i + dir_i, current.j + 1))
                 if (map.CellIsTraversable(current.i + dir_i, current.j + 1)
                         && map.CellIsObstacle(current.i, current.j + 1))
@@ -46,7 +46,7 @@ void JP_Search::Jump_Points(int dir_i, int dir_j, Node current, const Map &map, 
                 if (map.CellIsTraversable(current.i + dir_i, current.j - 1)
                         && map.CellIsObstacle(current.i, current.j - 1))
                     found = true;
-        } else if (dir_i == 0) {
+        } else if (!dir_i) {
             if (map.CellOnGrid(current.i + 1, current.j + dir_j))
                 if (map.CellIsTraversable(current.i + 1, current.j + dir_j)
                         && map.CellIsObstacle(current.i + 1, current.j))
@@ -80,7 +80,7 @@ bool JP_Search::Neighbours(int dir_i, int dir_j, Node current, const Map &map)
     while(map.CellOnGrid(current.i, current.j) && map.CellIsTraversable(current.i, current.j)) {
         if (map.getFinish_i() == current.i && map.getFinish_j() == current.j)
             return true;
-        if (dir_i == 0 && map.CellOnGrid(current.i, current.j + dir_j)) {
+        if (!dir_i && map.CellOnGrid(current.i, current.j + dir_j)) {
             if (map.CellOnGrid(current.i + 1, current.j))
                 if (map.CellIsTraversable(current.i + 1, current.j + dir_j)
                         && map.CellIsObstacle(current.i + 1, current.j))
@@ -90,7 +90,7 @@ bool JP_Search::Neighbours(int dir_i, int dir_j, Node current, const Map &map)
                         && map.CellIsObstacle(current.i - 1, current.j))
                     return true;
         }
-        if (dir_j == 0 && map.CellOnGrid(current.i + dir_i, current.j)) {
+        if (!dir_j && map.CellOnGrid(current.i + dir_i, current.j)) {
             if (map.CellOnGrid(current.i, current.j + 1))
                 if (map.CellIsTraversable(current.i + dir_i, current.j + 1)
                         && map.CellIsObstacle(current.i, current.j + 1))
@@ -120,7 +120,7 @@ std::list<Node> JP_Search::findSuccessors(Node current, const Map &map, const En
         dir_i = find_dir(current.i, current.parent->i);
         dir_j = find_dir(current.j, current.parent->j);
         Jump_Points(dir_i, dir_j, current, map, successors);
-        if (dir_i != 0 && dir_j != 0) {
+        if (dir_i && dir_j) {
             if (map.CellIsObstacle(current.i - dir_i, current.j))
                 Jump_Points(-dir_i, dir_j, current, map, successors);
             if (map.CellIsObstacle(current.i, current.j - dir_j))
@@ -128,14 +128,14 @@ std::list<Node> JP_Search::findSuccessors(Node current, const Map &map, const En
             Jump_Points(dir_i, 0, current, map, successors);
             Jump_Points(0, dir_j, current, map, successors);
         }
-        if (dir_i == 0) {
+        if (!dir_i) {
             if (map.CellOnGrid(current.i - dir_j, current.j))
                 if (map.CellIsObstacle(current.i - dir_j, current.j))
                     Jump_Points(-dir_j, dir_j, current, map, successors);
             if (map.CellOnGrid(current.i + dir_j, current.j))
                 if (map.CellIsObstacle(current.i + dir_j, current.j))
                     Jump_Points(dir_j, dir_j, current, map, successors);
-        } else if (dir_j == 0) {
+        } else if (!dir_j) {
             if (map.CellOnGrid(current.i, current.j - dir_i))
                 if (map.CellIsObstacle(current.i, current.j - dir_i))
                     Jump_Points(dir_i, -dir_i, current, map, successors);
