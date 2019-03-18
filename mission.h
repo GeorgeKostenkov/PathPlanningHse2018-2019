@@ -7,6 +7,7 @@
 #include "ilogger.h"
 #include "searchresult.h"
 #include "environmentoptions.h"
+#include "jp_search.h"
 #include "astar.h"
 #include "dijkstra.h"
 #include "xmllogger.h"

@@ -1,4 +1,4 @@
-    #include "isearch.h"
+#include "isearch.h"
 
 ISearch::ISearch()
 {
@@ -10,7 +10,6 @@ ISearch::~ISearch(void) {}
 
 SearchResult ISearch::startSearch(ILogger *Logger, const Map &map, const EnvironmentOptions &options)
 {
-    //need to implement
     std::list<Node> successors;
     Node start , finish;
     bool in_open = 0;
@@ -20,7 +19,6 @@ SearchResult ISearch::startSearch(ILogger *Logger, const Map &map, const Environ
     finish.j = map.getFinish_j();
     start.parent = nullptr;
     unsigned int steps = 0;
-    double success_curr_cost;
     int height = map.getMapHeight();
     start.g = 0;
     start.H = computeHFromCellToCell(start.i, start.j, finish.i, finish.j, options);
@@ -36,6 +34,7 @@ SearchResult ISearch::startSearch(ILogger *Logger, const Map &map, const Environ
         open.erase(optimum);
         close[hash(current, height)] = current;
         if (current == finish) {
+            current = resetParent(current, *current.parent, map);
             sresult.pathfound = 1;
             break;
         }
@@ -46,25 +45,21 @@ SearchResult ISearch::startSearch(ILogger *Logger, const Map &map, const Environ
                 continue;
             success.H = hweight * computeHFromCellToCell(success.i, success.j, finish.i, finish.j, options);
             if (success.i == current.i || success.j == current.j) {
-                success_curr_cost = current.g + 1;
+                success.g = current.g + 1;
+            } else {
+                success.g = current.g + sqrt(2);
             }
-            else {
-                success_curr_cost = current.g + sqrt(2);
-            }
+            success.parent = &close[hash(current, height)];
+            success = resetParent(success, *success.parent, map);
+            success.F = success.g + success.H;
             for (auto it = open.begin(); it != open.end(); ++it){
                 if (*it == success) {
                     in_open = 1;
-                    if (success_curr_cost < it->g) {
-                        it->g = success_curr_cost;
-                        it->F = it->g + it->H;
-                        it->parent = &close[hash(current, height)];
-                    }
+                    if (success.g < it->g)
+                        *it = success;
                 }
             }
             if (!in_open) {
-                success.g = success_curr_cost;
-                success.F = success.g + success.H;
-                success.parent = &close[hash(current, height)];
                 open.push_front(success);
             }
         }
@@ -147,15 +142,15 @@ std::_List_iterator<Node> ISearch::optimal() {
 
 void ISearch::makeSecondaryPath() {
     auto it = lppath.begin();
-    int first_I, first_J, second_I, second_J, diff1, diff2;
+    int first_i, first_j, second_I, second_J, diff1, diff2;
     hppath.push_back(*it);
     while (it != --lppath.end()) {
-        first_I = it->i;
-        first_J = (it++)->j;
+        first_i = it->i;
+        first_j = (it++)->j;
         second_I = it->i;
         second_J = (it++)->j;
-        diff1 = second_I - first_I;
-        diff2 = second_J - first_J;
+        diff1 = second_I - first_i;
+        diff2 = second_J - first_j;
         if ((it->i - second_I) != diff1 || (it->j - second_J) != diff2)
             hppath.push_back(*(--it));
         else
