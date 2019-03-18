@@ -44,11 +44,7 @@ SearchResult ISearch::startSearch(ILogger *Logger, const Map &map, const Environ
             if (close.find(hash(success, height)) != close.end())
                 continue;
             success.H = hweight * computeHFromCellToCell(success.i, success.j, finish.i, finish.j, options);
-            if (success.i == current.i || success.j == current.j) {
-                success.g = current.g + 1;
-            } else {
-                success.g = current.g + sqrt(2);
-            }
+
             success.parent = &close[hash(current, height)];
             success = resetParent(success, *success.parent, map);
             success.F = success.g + success.H;
@@ -88,8 +84,10 @@ std::list<Node> ISearch::findSuccessors(Node curNode, const Map &map, const Envi
             child.j = j;
             if (map.CellOnGrid(i, j) && map.CellIsTraversable(i, j) && !(i == x && j == y)) {
                 if (abs(x - i) + abs(y - j) == 1) {
+                    child.g = curNode.g + 1;
                     successors.push_front(child);
                 } else if (options.allowdiagonal) {
+                    child.g = curNode.g + sqrt(2);
                     if (map.CellIsTraversable(i, y) && map.CellIsTraversable(x, j)) {
                         successors.push_front(child);
                     } else if (options.cutcorners) {
