@@ -124,14 +124,54 @@ void XmlLogger::writeToLogMap(const Map &map, const std::list<Node> &path)
     }
 }
 
-/*void XmlLogger::writeToLogOpenClose(const typename &open, const typename &close)
+void XmlLogger::writeToLogOpenClose(const std::list<Node> &open, const std::map<int, Node> &close, bool last)
 {
-    //need to implement
     if (loglevel != CN_LP_LEVEL_FULL_WORD  && !(loglevel == CN_LP_LEVEL_MEDIUM_WORD && last))
         return;
+    XMLElement *element  = doc.NewElement(CNS_TAG_STEP);
+    XMLElement *child    = 0;
+    XMLElement *lowlevel = doc.FirstChildElement(CNS_TAG_ROOT);
+    lowlevel = lowlevel->FirstChildElement(CNS_TAG_LOG)->FirstChildElement(CNS_TAG_LOWLEVEL);
 
+    int iterate = 0;
+    for (child = lowlevel->FirstChildElement(); child != nullptr; child = child->NextSiblingElement())
+        iterate++;
 
-}*/
+    element->SetAttribute(CNS_TAG_ATTR_NUM, iterate);
+    lowlevel->InsertEndChild(element);
+    lowlevel = lowlevel->LastChildElement();
+
+    lowlevel->InsertEndChild(doc.NewElement(CNS_TAG_OPEN));
+    child = lowlevel->LastChildElement();
+    for (auto it = open.begin(); it != open.end(); ++it) {
+                    element = doc.NewElement(CNS_TAG_POINT);
+                    element->SetAttribute(CNS_TAG_ATTR_X, it->j);
+                    element->SetAttribute(CNS_TAG_ATTR_Y, it->i);
+                    element->SetAttribute(CNS_TAG_ATTR_F, it->F);
+                    element->SetAttribute(CNS_TAG_ATTR_G, it->g);
+                    if (it->g > 0) {
+                        element->SetAttribute(CNS_TAG_ATTR_PARX, it->parent->j);
+                        element->SetAttribute(CNS_TAG_ATTR_PARY, it->parent->i);
+                    }
+                    child->InsertEndChild(element);
+    }
+
+    lowlevel->InsertEndChild(doc.NewElement(CNS_TAG_CLOSE));
+    child = lowlevel->LastChildElement();
+
+    for (auto it = close.begin(); it != close.end(); ++it) {
+        element = doc.NewElement(CNS_TAG_POINT);
+        element->SetAttribute(CNS_TAG_ATTR_X, it->second.j);
+        element->SetAttribute(CNS_TAG_ATTR_Y, it->second.i);
+        element->SetAttribute(CNS_TAG_ATTR_F, it->second.F);
+        element->SetAttribute(CNS_TAG_ATTR_G, it->second.g);
+        if (it->second.g > 0) {
+            element->SetAttribute(CNS_TAG_ATTR_PARX, it->second.parent->j);
+            element->SetAttribute(CNS_TAG_ATTR_PARY, it->second.parent->i);
+        }
+        child->InsertEndChild(element);
+    }
+}
 
 void XmlLogger::writeToLogPath(const std::list<Node> &path)
 {

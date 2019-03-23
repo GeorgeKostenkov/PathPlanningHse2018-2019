@@ -59,7 +59,9 @@ SearchResult ISearch::startSearch(ILogger *Logger, const Map &map, const Environ
                 open.push_front(success);
             }
         }
+        Logger->writeToLogOpenClose(open, close, false);
     }
+    Logger->writeToLogOpenClose(open, close, true);
     if (sresult.pathfound == 1)
         makePrimaryPath(current);
     end = std::chrono::system_clock::now();
